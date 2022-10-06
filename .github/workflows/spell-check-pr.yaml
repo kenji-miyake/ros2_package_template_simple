@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3.1.0
 
       - name: Retrieve spell check dictionary
         run: |
@@ -16,6 +16,6 @@ jobs:
             --output .github/workflows/.cspell.json \
             https://raw.githubusercontent.com/tier4/autoware-spell-check-dict/main/cspell/.cspell.json
 
-      - uses: streetsidesoftware/cspell-action@v1.3.2
+      - uses: streetsidesoftware/cspell-action@v1
         with:
           config: ".github/workflows/.cspell.json"
