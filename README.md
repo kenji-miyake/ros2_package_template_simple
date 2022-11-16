@@ -12,7 +12,7 @@ brew install fd sd rename
 
 ```sh
 cd YOUR_ROS_WORKSPACE
-git clone git@github.com:kenji-miyake/ros2_package_template_simple.git YOUR_PACKAGE_NAME
+git clone https://github.com/kenji-miyake/ros2_package_template_simple.git YOUR_PACKAGE_NAME
 cd YOUR_PACKAGE_NAME
 
 # case1. If you'd like to cleanup manually
