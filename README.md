@@ -14,6 +14,9 @@ brew install fd sd rename
 ### Or using apt and bin
 ```sh
 sudo apt install fd-find rename
+
+# Then link fdfind as fd, https://github.com/sharkdp/fd#on-ubuntu
+ln -s $(which fdfind) ~/.local/bin/fd
 ```
 
 Install `bin`
