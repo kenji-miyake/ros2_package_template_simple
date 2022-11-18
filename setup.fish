@@ -19,8 +19,8 @@ sd "package_name" $snake_case_package_name $target_files
 sd "PackageName" $PascalCasePackageName $target_files
 sd "PACKAGE_NAME" $UPPER_SNAKE_CASE_PACKAGE_NAME $target_files
 
-rename -s "package_name" "$snake_case_package_name" (fd -t d)
-rename -s "package_name" "$snake_case_package_name" (fd -t f --exclude "*.fish")
+rnr -f --no-dump "package_name" "$snake_case_package_name" (fd -t d)
+rnr -f --no-dump "package_name" "$snake_case_package_name" (fd -t f --exclude "*.fish")
 
 if set -q _flag_clean
     mv $script_dir/PACKAGE_README.md $script_dir/README.md
