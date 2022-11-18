@@ -26,7 +26,7 @@ My ROS2 package template
   ```sh
   bin install https://github.com/chmln/sd
   # When it asks "Multiple matches found, please select one:",
-  # select [1] sd-v0.7.6-x86_64-unknown-linux-gnu
+  # select [1] sd-{version}-x86_64-unknown-linux-gnu
   ```
 
 - [rnr](https://github.com/ismaelgv/rnr)
@@ -34,8 +34,8 @@ My ROS2 package template
   ```sh
   bin install https://github.com/ismaelgv/rnr
   # When it asks "Multiple matches found, please select one:",
-  # select [1] rnr-v0.4.1-x86_64-unknown-linux-gnu.tar.gz
-  # and select [7] rnr-v0.4.1-x86_64-unknown-linux-gnu/rnr
+  # select [1] rnr-{version}-x86_64-unknown-linux-gnu.tar.gz
+  # and select [7] rnr-{version}-x86_64-unknown-linux-gnu/rnr
   ```
 
 ## Usage
