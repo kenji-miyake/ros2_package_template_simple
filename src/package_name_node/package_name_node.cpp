@@ -25,100 +25,26 @@ using std::chrono::duration;
 using std::chrono::duration_cast;
 using std::chrono::nanoseconds;
 
-namespace
-{
-template <class T>
-bool update_param(
-  const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
-{
-  const auto itr = std::find_if(
-    params.cbegin(), params.cend(),
-    [&name](const rclcpp::Parameter & p) { return p.get_name() == name; });
-
-  // Not found
-  if (itr == params.cend()) {
-    return false;
-  }
-
-  value = itr->template get_value<T>();
-  return true;
-}
-}  // namespace
-
 namespace package_name
 {
 PackageNameNode::PackageNameNode(const rclcpp::NodeOptions & node_options)
 : Node("package_name", node_options)
 {
-  // Parameter Server
-  set_param_res_ =
-    this->add_on_set_parameters_callback(std::bind(&PackageNameNode::onSetParam, this, _1));
-
-  // Parameter
-  node_param_.update_rate_hz = declare_parameter<double>("update_rate_hz", 10.0);
-
-  // Subscriber
-  sub_data_ = create_subscription<Int32>(
-    "~/input/data", rclcpp::QoS{1}, std::bind(&PackageNameNode::onData, this, _1));
-
-  // Publisher
-  pub_data_ = create_publisher<Int32>("~/output/data", 1);
+  param_listener_ = std::make_shared<package_name::ParamListener>(get_node_parameters_interface());
+  const auto params = param_listener_->get_params();
+  RCLCPP_INFO(get_logger(), "update_rate_hz: %f", params.update_rate_hz);
 
   // Timer
-  const auto update_period_ns = rclcpp::Rate(node_param_.update_rate_hz).period();
-  timer_ = rclcpp::create_timer(
-    this, get_clock(), update_period_ns, std::bind(&PackageNameNode::onTimer, this));
-}
-
-void PackageNameNode::onData(const Int32::ConstSharedPtr msg) { data_ = msg; }
-
-rcl_interfaces::msg::SetParametersResult PackageNameNode::onSetParam(
-  const std::vector<rclcpp::Parameter> & params)
-{
-  rcl_interfaces::msg::SetParametersResult result;
-
-  try {
-    // Copy to local variable
-    auto p = node_param_;
-
-    // Update params
-    update_param(params, "update_rate_hz", p.update_rate_hz);
-
-    // Copy back to member variable
-    node_param_ = p;
-  } catch (const rclcpp::exceptions::InvalidParameterTypeException & e) {
-    result.successful = false;
-    result.reason = e.what();
-    return result;
-  }
-
-  result.successful = true;
-  result.reason = "success";
-  return result;
-}
-
-bool PackageNameNode::isDataReady()
-{
-  if (!data_) {
-    RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000, "waiting for data msg...");
-    return false;
-  }
-
-  return true;
+  const auto update_period_ns = rclcpp::Rate(params.update_rate_hz).period();
+  timer_ = create_wall_timer(update_period_ns, std::bind(&PackageNameNode::onTimer, this));
 }
 
 void PackageNameNode::onTimer()
 {
-  if (!isDataReady()) {
-    return;
-  }
+  const auto params = param_listener_->get_params();
 
-  // Update
-  const auto output = data_->data + 1;
-
-  // Sample
-  pub_data_->publish(example_interfaces::build<Int32>().data(output));
-  RCLCPP_INFO(get_logger(), "input, output: %d, %d", data_->data, output);
+  const auto color = params.background;
+  RCLCPP_INFO(get_logger(), "Background color (r,g,b): %ld, %ld, %ld", color.r, color.g, color.b);
 }
 
 }  // namespace package_name

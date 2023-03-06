@@ -16,9 +16,18 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
+generate_parameter_library(
+  package_name_parameters # cmake target name for the parameter library
+  src/package_name_parameters.yaml # path to input yaml file
+)
+
 ## Targets
 ament_auto_add_library(package_name_node_component SHARED
   src/package_name_node/package_name_node.cpp
+)
+
+target_link_libraries(package_name_node_component
+  package_name_parameters
 )
 
 rclcpp_components_register_node(package_name_node_component
