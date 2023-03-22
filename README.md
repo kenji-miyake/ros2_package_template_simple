@@ -24,7 +24,7 @@ My ROS2 package template
 - [sd](https://github.com/chmln/sd)
 
   ```sh
-  bin install https://github.com/chmln/sd
+  bin install https://github.com/chmln/sd ~/.local/bin/sd
   # When it asks "Multiple matches found, please select one:",
   # select [1] sd-{version}-x86_64-unknown-linux-gnu
   ```
